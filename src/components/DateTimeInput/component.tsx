@@ -1,11 +1,11 @@
 import { ChangeEvent, memo, useCallback, useMemo } from "react";
 
+const TODAY = new Date().toISOString().substring(0, 16);
+
 interface Props {
   onChange: (value: Date) => void;
   value: Date;
 }
-
-const TODAY = new Date().toISOString().substring(0, 10);
 
 const Input = ({ value, onChange }: Props) => {
   const handleChange = useCallback(
@@ -16,10 +16,10 @@ const Input = ({ value, onChange }: Props) => {
     [onChange],
   );
 
-  const derivedValue = useMemo(() => {
+  const inputValue = useMemo(() => {
     const dt = new Date(value);
     dt.setMinutes(dt.getMinutes() - dt.getTimezoneOffset());
-    return dt;
+    return dt.toISOString().substring(0, 16);
   }, [value]);
 
   return (
@@ -27,8 +27,8 @@ const Input = ({ value, onChange }: Props) => {
       type="datetime-local"
       name="meeting-time"
       onChange={handleChange}
-      value={derivedValue.toISOString().substring(0, 16)}
-      min={`${TODAY}T00:00`}
+      value={inputValue}
+      min={`${TODAY}`}
       step={60 * 15}
     />
   );
